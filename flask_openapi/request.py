@@ -15,13 +15,13 @@ from .utils import parse_parameters
 def _get_list_value(model: Type[BaseModel], args: MultiDict, model_field_key: str, model_field_value: FieldInfo):
     if model_field_value.alias and model.model_config.get("populate_by_name"):
         key = model_field_value.alias
-        value = args.getlist(model_field_value.alias) or args.getlist(model_field_key)
+        value = args.getlist(model_field_value.alias) or args.getlist(f'{model_field_value.alias}[]') or args.getlist(model_field_key) or args.getlist(f'{model_field_key}[]')
     elif model_field_value.alias:
         key = model_field_value.alias
-        value = args.getlist(model_field_value.alias)
+        value = args.getlist(model_field_value.alias) or args.getlist(f'{model_field_value.alias}[]')
     else:
         key = model_field_key
-        value = args.getlist(model_field_key)
+        value = args.getlist(model_field_key) or args.getlist(f'{model_field_key}[]')
 
     return key, value
 
